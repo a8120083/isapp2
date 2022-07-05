@@ -15,28 +15,38 @@
         var playerType = osql.getParam('type');
 
         $().ready(function () {
-            LoginGame();
-            showGames();
+            showPlayers();
             setInterval(showGames, 8000);
         });
 
-        async function showGames(){
-            var select = document.getElementById("RoomList");
-            select.innerHTML = '';
-            var sql2 = `SELECT * FROM Game;`
-            var games = await osql.connect(sql2);
-            for(var i = 1; i < games.length; i++){
-                var game = games[i];
-                addOption(game.name, game.id);
+        async function showPlayers() {
+            var sql = `select * from Players where gameid = ${gameid}`
+            var objects = await osql.connect(sql);
+            var sqlname = `inner join Players Users bruh bruh bruh`
+            var username = await osql.connect(sqlname)
+
+            var html = '';
+            html = html + '<table border="1" style="border-collapse: collapse">';
+            for (var i = 0; i < objects.length; i++) {
+                html = html + '<tr>';
+                var object = objects[i];
+                html = html + '<td>' + object.type + '</td>';
+                if(object.type == 1){
+                    var levelText = "回答者";
+                } else if(object.type == 2){
+                    var levelText = "お題作成者";
+                }
+                html = html + '<td>' + levelText + '</td>';
+                html = html + '<td>' + '<input type="radio" name="playerType" value="1" checked>回答者';
+                html = html + '<td>' + '<input type="radio" name="playerType" value="2">お題作成者';
+                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonPressed(this.value)">参加</button>' + '</td>';
+                html = html + '</tr>';
             }
+            html = html + '</table>';
+            document.getElementById('ohgiriTable').innerHTML = html;
         }
 
-        async function LoginGame() {
-            var me = await osql.getMe();
-            var sql = `insert ignore into Players (id, name) VALUES ('${me.id}', "${me.fname}")`;
-            // primary keyを設定して、重複を防ぐ
-            await osql.connect(sql);
-        }
+        
 
         function buttonGoPressed() {
             let game = document.getElementById("RoomList").value;

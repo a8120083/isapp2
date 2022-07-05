@@ -62,14 +62,14 @@
             await osql.connect(sql);
             var sqlcount = `update Ohgiri set playernum = playernum + 1 where id = ${gameid};`;
             await osql.connect(sqlcount);
-            location.href = `usertop.html?gameid=${gameid}&type=${type}`;
+            location.href = `waiting.html?gameid=${gameid}&type=${type}`;
         }
 
         async function buttonCreationPressed() {
             var newRoom = document.forms['creation'].elements['createRoom'].value;
             var level = document.forms['creation'].elements['level'].value;
             console.log(newRoom);
-            var sql = `insert into Ohgiri(name, providerid, playernum, level, subjectid) values ('${newRoom}', 0, 1, ${level}, 0);`;
+            var sql = `insert into Ohgiri (name, providerid, playernum, level, subjectid) values ('${newRoom}', 0, 1, ${level}, 0);`;
             await osql.connect(sql);
         }
 
