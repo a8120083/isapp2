@@ -10,7 +10,6 @@
 
     <script>
         osql.requireLogin();
-        var userid = osql.getParam('id');
         var username = osql.getParam('name');
 
         $().ready(function () {
@@ -27,30 +26,50 @@
             var objects = await osql.connect(sql);
 
             var html = '';
-            html = html + '<table border="1">';
+            html = html + '<table border="1" style="border-collapse: collapse">';
             for (var i = 0; i < objects.length; i++) {
                 html = html + '<tr>';
                 var object = objects[i];
-                html = html + '<td>' + object.gameid + '</td>';
+                html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + object.playernum + '</td>';
-                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonResPressed(this.value)">回答者として参加</button>' + '</td>';
-                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonProPressed(this.value)">お題作成者として参加</button>' + '</td>';
+                if(object.level == 1){
+                    var levelText = "初級者";
+                } else if(object.level == 2){
+                    var levelText = "上級者";
+                }
+                html = html + '<td>' + levelText + '</td>';
+                html = html + '<td>' + '<input type="radio" name="playerType" value="1" checked>回答者';
+                html = html + '<td>' + '<input type="radio" name="playerType" value="2">お題作成者';
+                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonPressed(this.value)">参加</button>' + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
-
-            document.getElementById("table").innerHTML = html;
-            return
+            document.getElementById('ohgiriTable').innerHTML = html;
         }
 
-        async function buttonResPressed(gameid) { // 回答者として参加
-            var sql = `insert into Players (userid, gameid, type) value (${userid}, ${gameid}, 2);`;
+        async function buttonPressed(gameid) { // 参加フォーム
+            var me = await osql.getMe();
+            var elements = document.getElementsByName("playerType");
+            // 選択状態の値を取得
+            for (var type = "", i = elements.length; i--;) {
+                if (elements[i].checked) {
+                    var type = elements[i].value;
+                    break;
+                }
+            }
+
+            var sql = `insert into Players (userid, gameid, type) values (${me.id}, ${gameid}, ${type});`;
             await osql.connect(sql);
-            var sqlcount = ``;
+            var sqlcount = `update Ohgiri set playernum = playernum + 1 where id = ${gameid};`;
+            await osql.connect(sqlcount);
+            location.href = `usertop.html?gameid=${gameid}&type=${type}`;
         }
 
-        async function buttonProPressed(gameid) { // お題作成者として参加
-            var sql = `insert into Players (userid, gameid, type) value (${userid}, ${gameid}, 1);`;
+        async function buttonCreationPressed() {
+            var newRoom = document.forms['creation'].elements['createRoom'].value;
+            var level = document.forms['creation'].elements['level'].value;
+            console.log(newRoom);
+            var sql = `insert into Ohgiri(name, providerid, playernum, level, subjectid) values ('${newRoom}', 0, 1, ${level}, 0);`;
             await osql.connect(sql);
         }
 
@@ -62,6 +81,15 @@
     <h1>ユーザトップ</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
+    <p>ルーム新規作成</p>
+    <form name="creation" method="post">
+        <label for="your_name">グループの名前：</label>
+        <input id="createRoom" name="createRoom" placeholder="名前を入力">
+        <label><input type="radio" name="level" value=1 required checked>初級者</label>
+        <label><input type="radio" name="level" value=2>上級者</label>
+        <input type="submit" value="作成">
+    </form>
+    <br>
     <div id="ohgiriTable"></div>
 </body>
 

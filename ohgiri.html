@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/osql.js"></script>
+
+
+    <script>
+        osql.requireLogin();
+        var gameid = osql.getParam('gameid');
+        var playerType = osql.getParam('type');
+
+        $().ready(function () {
+            LoginGame();
+            showGames();
+            setInterval(showGames, 8000);
+        });
+
+        async function showGames(){
+            var select = document.getElementById("RoomList");
+            select.innerHTML = '';
+            var sql2 = `SELECT * FROM Game;`
+            var games = await osql.connect(sql2);
+            for(var i = 1; i < games.length; i++){
+                var game = games[i];
+                addOption(game.name, game.id);
+            }
+        }
+
+        async function LoginGame() {
+            var me = await osql.getMe();
+            var sql = `insert ignore into Players (id, name) VALUES ('${me.id}', "${me.fname}")`;
+            // primary keyを設定して、重複を防ぐ
+            await osql.connect(sql);
+        }
+
+        function buttonGoPressed() {
+            let game = document.getElementById("RoomList").value;
+            location.href = `waiting.html?id=${game}`;
+        }
+
+        async function buttonpressed() {
+            var name = document.getElementById("roomname").value;
+            await CreateGame(name);
+        }
+
+        async function CreateGame(roomname) {
+            var sql = `insert into Game (name, turn, playernum) VALUES ('${roomname}', 0, 0)`;
+            await osql.connect(sql);
+        }
+
+        function addOption(name, id) {
+                var Select = document.getElementById("RoomList");
+                var option = document.createElement("option");
+                // optionタグのテキストを4に設定する
+                option.text = name;
+                // optionタグのvalueを4に設定する
+                option.value = id;
+                // selectタグの子要素にoptionタグを追加する
+                Select.appendChild(option);
+            }
+    </script>
+
+</head>
+
+<body>
+    <h1>大喜利</h1>
+    <div>
+        <!-- <h2>ネーム、テーマ作成</h2>
+            name(4to8characters):<input id="name" value="" type="text" equired
+            minlength="4" maxlength="8" size="10"><br>
+        </form>
+        <br> -->
+        <p id="result"></p>
+        <select name="rooms" size="4" id="RoomList">
+            <!-- <option value="room1">Room1</option> -->
+        </select>
+        <button id="goToRoom" onclick="buttonGoPressed()">Go!</button>
+        <!-- <ul>
+            <ol><a href="waiting.html">ゲーム1:参加する</a></ol>
+            <ol><a href="waiting.html">ゲーム2:参加する</a></ol>
+        </ul> -->
+        <br>
+        <hr>
+        <br>
+        <input id="roomname" value="" type="text">
+        <button id="a" onclick="buttonpressed()">作成</button>
+
+    </div>
+</body>
+
+</html>
