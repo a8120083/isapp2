@@ -33,13 +33,25 @@
                 var object = objects[i];
                 html = html + '<td>' + object.gameid + '</td>';
                 html = html + '<td>' + object.playernum + '</td>';
-                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.id + ' onclick="buttonFolPressed(this.value,this.id)">フォローする</button>' + '</td>';
+                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonResPressed(this.value)">回答者として参加</button>' + '</td>';
+                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonProPressed(this.value)">お題作成者として参加</button>' + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
 
             document.getElementById("table").innerHTML = html;
             return
+        }
+
+        async function buttonResPressed(gameid) { // 回答者として参加
+            var sql = `insert into Players (userid, gameid, type) value (${userid}, ${gameid}, 2);`;
+            await osql.connect(sql);
+            var sqlcount = ``;
+        }
+
+        async function buttonProPressed(gameid) { // お題作成者として参加
+            var sql = `insert into Players (userid, gameid, type) value (${userid}, ${gameid}, 1);`;
+            await osql.connect(sql);
         }
 
     </script>
