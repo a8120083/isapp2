@@ -10,6 +10,38 @@
 
     <script>
         osql.requireLogin();
+        var userid = osql.getParam('id');
+        var username = osql.getParam('name');
+
+        $().ready(function () {
+            init();
+            setInterval(showOhgiriRooms, 2000);
+        });
+
+        function init() {
+            document.getElementById('welcome').innerHTML = `ようこそ${username}さん`;
+        }
+
+        async function showOhgiriRooms() {
+            var sql = `select * from Ohgiri`
+            var objects = await osql.connect(sql);
+
+            var html = '';
+            html = html + '<table border="1">';
+            for (var i = 0; i < objects.length; i++) {
+                html = html + '<tr>';
+                var object = objects[i];
+                html = html + '<td>' + object.gameid + '</td>';
+                html = html + '<td>' + object.playernum + '</td>';
+                html = html + '<td>' + object.playernum + '</td>';
+                html = html + '</tr>';
+            }
+            html = html + '</table>';
+
+            document.getElementById("table").innerHTML = html;
+            return
+        }
+
     </script>
 
 </head>
@@ -18,7 +50,7 @@
     <h1>ユーザトップ</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
-
+    <div id="ohgiriTable"></div>
 </body>
 
 </html>
