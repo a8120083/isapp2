@@ -33,7 +33,7 @@
                 var object = objects[i];
                 html = html + '<td>' + object.gameid + '</td>';
                 html = html + '<td>' + object.playernum + '</td>';
-                html = html + '<td>' + object.playernum + '</td>';
+                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.id + ' onclick="buttonFolPressed(this.value,this.id)">フォローする</button>' + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
