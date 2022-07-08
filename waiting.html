@@ -22,8 +22,8 @@
         async function showPlayers() {// 参加者を表示するテーブル
             var sql = `select * from Players where gameid = ${gameid}`
             var objects = await osql.connect(sql);
-            var sqlname = `inner join Players Users bruh bruh bruh`
-            var username = await osql.connect(sqlname)
+            // var sqlname = `inner join Players Users bruh bruh bruh`
+            // var username = await osql.connect(sqlname)
 
             var html = '';
             html = html + '<table border="1" style="border-collapse: collapse">';
@@ -49,8 +49,12 @@
         
 
         function buttonGoPressed() {///  ゲーム参加するボタン
-            let game = document.getElementById("RoomList").value; 
-            location.href = `waiting.html?id=${game}`;
+            if (playerType == 1){
+                location.href = `answer.html?gameid=${gameid}`;
+            } else if (playerType == 2){
+                location.href = `subject.html?gameid=${gameid}`;
+            }
+            
         }
 
 

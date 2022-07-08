@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/osql.js"></script>
+
+    <script>// お題作成者のページ
+        osql.requireLogin();
+        var gameid = osql.getParam('gameid');
+
+        $().ready(function () {
+            init();
+        });
+
+        function init() {
+            document.getElementById('welcome').innerHTML = `ようこそfdjsoafjdosaさん`;
+        }
+
+        async function buttonPressed() {
+            var me = await osql.getMe();
+            var sqlid = `select * from Players where userid = ${me.id} and gameid = ${gameid};`
+            var playerInfo = await osql.connect(sqlid);
+            var subject = document.getElementById("createSubject").value;
+            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 1, ${playerInfo.playerid}, '${subject}');`;
+            await osql.connect(sql);
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <h1>ユーザトップ</h1>
+    <p id="welcome">ようこそxxさん</p>
+    <hr>
+    <div id="subjectFormat"></div>
+    <p>ルーム新規作成</p>
+        <input id="createSubject" name="createSubject" placeholder="お題を入力">
+        <button id="create" onclick="buttonPressed()">完了</button>
+    <br>
+</body>
+
+</html>
