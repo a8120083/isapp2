@@ -46,20 +46,13 @@
             document.getElementById('result').innerHTML = html;
         }
 
-
-<<<<<<< HEAD
-
-
-=======
         function buttonGoPressed() {///  ゲーム参加するボタン
             if (playerType == 1){
                 location.href = `answer.html?gameid=${gameid}`;
             } else if (playerType == 2){
                 location.href = `subject.html?gameid=${gameid}`;
             }
-            
         }
->>>>>>> origin/master
 
 
     </script>
@@ -74,6 +67,7 @@
             minlength="4" maxlength="8" size="10"><br>
         </form>
         <br> -->
+        <button id="bruh" onclick="buttonGoPressed()">GO!</button>
         <div id="result"></div>
 
     </div>
