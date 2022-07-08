@@ -16,10 +16,10 @@
 
         $().ready(function () {
             showPlayers();
-            setInterval(showGames, 8000);
+            setInterval(showPlayers, 2000);
         });
 
-        async function showPlayers() {
+        async function showPlayers() {// 参加者を表示するテーブル
             var sql = `select * from Players where gameid = ${gameid}`
             var objects = await osql.connect(sql);
             var sqlname = `inner join Players Users bruh bruh bruh`
@@ -48,31 +48,12 @@
 
         
 
-        function buttonGoPressed() {
-            let game = document.getElementById("RoomList").value;
+        function buttonGoPressed() {///  ゲーム参加するボタン
+            let game = document.getElementById("RoomList").value; 
             location.href = `waiting.html?id=${game}`;
         }
 
-        async function buttonpressed() {
-            var name = document.getElementById("roomname").value;
-            await CreateGame(name);
-        }
 
-        async function CreateGame(roomname) {
-            var sql = `insert into Game (name, turn, playernum) VALUES ('${roomname}', 0, 0)`;
-            await osql.connect(sql);
-        }
-
-        function addOption(name, id) {
-                var Select = document.getElementById("RoomList");
-                var option = document.createElement("option");
-                // optionタグのテキストを4に設定する
-                option.text = name;
-                // optionタグのvalueを4に設定する
-                option.value = id;
-                // selectタグの子要素にoptionタグを追加する
-                Select.appendChild(option);
-            }
     </script>
 
 </head>
@@ -85,20 +66,12 @@
             minlength="4" maxlength="8" size="10"><br>
         </form>
         <br> -->
-        <p id="result"></p>
-        <select name="rooms" size="4" id="RoomList">
-            <!-- <option value="room1">Room1</option> -->
-        </select>
+        <div id="result"></div>
         <button id="goToRoom" onclick="buttonGoPressed()">Go!</button>
         <!-- <ul>
             <ol><a href="waiting.html">ゲーム1:参加する</a></ol>
             <ol><a href="waiting.html">ゲーム2:参加する</a></ol>
         </ul> -->
-        <br>
-        <hr>
-        <br>
-        <input id="roomname" value="" type="text">
-        <button id="a" onclick="buttonpressed()">作成</button>
 
     </div>
 </body>

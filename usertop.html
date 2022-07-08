@@ -58,9 +58,9 @@
                 }
             }
 
-            var sql = `insert into Players (userid, gameid, type) values (${me.id}, ${gameid}, ${type});`;
+            var sql = `insert into Players (userid, gameid, type) values ('${me.id}', ${gameid}, ${type});`;
             await osql.connect(sql);
-            var sqlcount = `update Ohgiri set playernum = playernum + 1 where id = ${gameid};`;
+            var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
             await osql.connect(sqlcount);
             location.href = `waiting.html?gameid=${gameid}&type=${type}`;
         }
