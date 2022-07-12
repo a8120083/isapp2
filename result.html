@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/osql.js"></script>
+
+    <script>
+        osql.requireLogin();
+        var gameid = osql.getParam('gameid');
+
+        $(document).ready(function () {
+            execSelect();
+        });
+
+        async function showResults() {
+            var sqlSub = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 2;`;
+            var objectSub = await osql.connect(sql);
+
+            var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 1;`;
+            var objectAns = await osql.connect(sql);
+
+            document.getElementById('subject').innerHTML = objectSub.context;
+            
+            ////////////////////////////////////////////////////////////////////////
+
+            var html = '';
+            html = html + '<ul>';
+            for (var i = 0; i < objectAns.length; i++) {
+                var object = objectAns[i];
+                html = html + '<ol>' + '回答者：' + object.userid + ' 回答内容：' + object.context + '</ol>';
+            }
+            html = html + '</ul>';
+            document.getElementById('answers').innerHTML = html;
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1>Users</h1>
+    <h1 id="subject"></h1>
+
+    <div id="answers"></div>
+</body>
+
+</html>
