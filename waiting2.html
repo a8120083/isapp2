@@ -47,13 +47,14 @@
 
 
         async function moveOn() {///  ゲーム参加するボタン
-            var sql = `select * from Ohgiri where id = ${gameid};`
+            var sql = `select * from Ohgiri where gameid = ${gameid};`
             var object = await osql.connect(sql);
             var playernum = object.playernum;
 
             var sql2 = `select * from Items where gameid = "${gameid}";`;
             var Items = await osql.connect(sql2);
             var length = Items.length;
+            console.log(length);
 
             if (playernum == length) {
                 location.href = `result.html?gameid=${gameid}`;
