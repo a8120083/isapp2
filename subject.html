@@ -27,7 +27,7 @@
             var sqlid = `select * from Players where userid = '${me.id}' and gameid = ${gameid};`
             var playerInfo = await osql.connect(sqlid);
             var subject = document.getElementById("createSubject").value;
-            var sql = `insert into Items (gameid, type, playerid, context) values (${gameid}, 2, ${playerInfo.playerid}, '${subject}');`;
+            var sql = `insert into Items (gameid, type, playerid, context) values (${gameid}, 2, ${playerInfo[0]['playerid']}, '${subject}');`;
             await osql.connect(sql);
             location.href = `waiting2.html?gameid=${gameid}`;
 
