@@ -16,7 +16,6 @@
 
         $().ready(function () {
             setInterval(showPlayers, 2000);
-            setInterval(moveOn, 2000);
         });
 
         async function showPlayers() {// 入力が終了したユーザーを表示するテーブル
@@ -43,16 +42,17 @@
             document.getElementById('result').innerHTML = html;
         }
 
-        var sql3 = `select * from Ohgiri where gameid = ${gameid};`
-        var object = await osql.connect(sql3);
-        var playernum = object.playernum;
 
-        var sql2 = `select * from Items where gameid = "${gameid}";`;
-        var Items = await osql.connect(sql2);
-        var length = Items.length;
-        console.log(length);
 
         async function moveOn() {///  ゲーム参加するボタン
+            var sql3 = `select * from Ohgiri where gameid = ${gameid};`
+            var object = await osql.connect(sql3);
+            var playernum = object.playernum;
+
+            var sql2 = `select * from Items where gameid = "${gameid}";`;
+            var Items = await osql.connect(sql2);
+            var length = Items.length;
+            console.log(length);
             if (playernum === length) {
                 location.href = `result.html?gameid=${gameid}`;
             } else {
