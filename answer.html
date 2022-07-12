@@ -22,10 +22,10 @@
 
         async function buttonPressed() {
             var me = await osql.getMe();
-            var sqlid = `select * from Players where userid = ${me.id} and gameid = ${gameid};`
+            var sqlid = `select * from Players where userid = '${me.id}' and gameid = ${gameid};`
             var playerInfo = await osql.connect(sqlid);
             var answer = document.getElementById("createAnswer").value;
-            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 1, ${playerInfo.playerid}, '${answer}');`;
+            var sql = `insert into Items (gameid, type, playerid, context) values (${gameid}, 1, ${playerInfo.playerid}, '${answer}');`;
             await osql.connect(sql);
             location.href = `waiting2.html?gameid=${gameid}`;
         }
