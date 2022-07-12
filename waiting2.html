@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/osql.js"></script>
+
+
+    <script>
+        osql.requireLogin();
+        var gameid = osql.getParam('gameid');
+        var playerType = osql.getParam('type');
+
+        $().ready(function () {
+            showPlayers();
+            setInterval(showPlayers, 2000);
+        });
+
+        async function showPlayers() {// 参加者を表示するテーブル
+            var sql = `select * from Players where gameid = "${gameid}";`;
+            var objects = await osql.connect(sql);
+            // var sqlname = `inner join Players Users bruh bruh bruh`
+            // var username = await osql.connect(sqlname)
+
+            var html = '';
+            html = html + '<table border="1" style="border-collapse: collapse">';
+            for (var i = 0; i < objects.length; i++) {
+                html = html + '<tr>';
+                var object = objects[i];
+                html = html + '<td>' + object.type + '</td>';
+                if (object.type == 1) {
+                    var levelText = "回答者";
+                } else if (object.type == 2) {
+                    var levelText = "お題作成者";
+                }
+                html = html + '<td>' + levelText + '</td>';
+                html = html + '<td>' + object.type + '</td>';
+                html = html + '<td>' + object.userid + '</td>';
+                html = html + '<td>' + object.userid + '</td>';
+                html = html + '</tr>';
+
+            }
+            html = html + '</table>';
+            document.getElementById('result').innerHTML = html;
+        }
+
+
+
+
+        function buttonGoPressed() {///  ゲーム参加するボタン
+            if (playerType == 1) {
+                location.href = `answer.html?gameid=${gameid}`;
+            } else if (playerType == 2) {
+                location.href = `subject.html?gameid=${gameid}`;
+            }
+
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+    <h1>大喜利</h1>
+    <div>
+        <!-- <h2>ネーム、テーマ作成</h2>
+            name(4to8characters):<input id="name" value="" type="text" equired
+            minlength="4" maxlength="8" size="10"><br>
+        </form>
+        <br> -->
+        <div id="result"></div>
+
+    </div>
+</body>
+
+</html>
