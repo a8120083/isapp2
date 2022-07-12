@@ -12,10 +12,6 @@
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
 
-        $(document).ready(function () {
-            execSelect();
-        });
-
         async function showResults() {
             var sqlSub = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 2;`;
             var objectSub = await osql.connect(sql);
@@ -46,7 +42,7 @@
 
     <div id="answers"></div>
     <hr>
-    
+
 </body>
 
 </html>
