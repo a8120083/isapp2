@@ -24,9 +24,10 @@
             var me = await osql.getMe();
             var sqlid = `select * from Players where userid = ${me.id} and gameid = ${gameid};`
             var playerInfo = await osql.connect(sqlid);
-            var subject = document.getElementById("createSubject").value;
-            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 1, ${playerInfo.playerid}, '${subject}');`;
+            var answer = document.getElementById("createAnswer").value;
+            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 2, ${playerInfo.playerid}, '${answer}');`;
             await osql.connect(sql);
+            location.href = `waiting2.html?gameid=${gameid}`;
         }
 
     </script>
@@ -34,12 +35,12 @@
 </head>
 
 <body>
-    <h1>ユーザトップ</h1>
+    <h1>解答作成</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
     <div id="subjectFormat"></div>
-    <p>ルーム新規作成</p>
-        <input id="createSubject" name="createSubject" placeholder="お題を入力">
+    <p>あなたは回答者です。回答を入力してください</p>
+        <input id="createAnswer" name="createAnswer" placeholder="回答を入力">
         <button id="create" onclick="buttonPressed()">完了</button>
     <br>
 </body>

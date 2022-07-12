@@ -22,7 +22,7 @@
         async function showPlayers() {// 参加者を表示するテーブル
             var sql = `select * from Players where gameid = "${gameid}";`;
             var objects = await osql.connect(sql);
-            // var sqlname = `inner join Players Users bruh bruh bruh`
+            // var sqlname = `inner join Players Users bruh bruh bruh`????? What was I thinking? Can't remember.
             // var username = await osql.connect(sqlname)
 
             var html = '';
