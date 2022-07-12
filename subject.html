@@ -8,7 +8,7 @@
     <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script type="text/javascript" src="lib/osql.js"></script>
 
-    <script>// 解答者のページ
+    <script>// 解答作成者のページ
 
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
@@ -27,8 +27,10 @@
             var sqlid = `select * from Players where userid = ${me.id} and gameid = ${gameid};`
             var playerInfo = await osql.connect(sqlid);
             var subject = document.getElementById("createSubject").value;
-            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 1, ${playerInfo.playerid}, '${subject}');`;
+            var sql = `insert into Items (gameid, type, playerid, context) values ('${gameid}', 2, ${playerInfo.playerid}, '${subject}');`;
             await osql.connect(sql);
+            location.href = `waiting2.html?gameid=${gameid}`;
+
         }
 
     </script>
@@ -41,8 +43,8 @@
     <hr>
     <div id="subjectFormat"></div>
     <p>お題を入力してください</p>
-        <input id="createSubject" name="createSubject" placeholder="お題を入力">
-        <button id="create" onclick="buttonPressed()">完了</button>
+    <input id="createSubject" name="createSubject" placeholder="お題を入力">
+    <button id="create" onclick="buttonPressed()">完了</button>
     <br>
 </body>
 
