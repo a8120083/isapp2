@@ -43,9 +43,6 @@
             document.getElementById('result').innerHTML = html;
         }
 
-
-
-
         async function moveOn() {///  ゲーム参加するボタン
             var sql = `select * from Ohgiri where gameid = ${gameid};`
             var object = await osql.connect(sql);
@@ -59,9 +56,8 @@
             if (playernum == length) {
                 location.href = `result.html?gameid=${gameid}`;
             } else {
-                document.getElementById('result2').innerHTML = '他のプレーヤーを待っています。';
+                document.getElementById('result2').innerHTML = '他のプレーヤーを待っています！！';
             }
-
         }
 
 
@@ -74,6 +70,8 @@
     <div>
         <div id="result"></div>
         <div id="result2">他のプレーヤーを待っています。</div>
+        <hr>
+        <button onclick="moveOn()">Go</button>
     </div>
 </body>
 
