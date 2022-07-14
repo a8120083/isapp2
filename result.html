@@ -17,37 +17,37 @@
         });
 
         function init(){
-            showResults();
+            
+            setInterval(showResults, 2000);
         }
 
         async function showResults() {
-            // var sqlSub = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 2;`;
-            // var objectSub = await osql.connect(sql);
+            var sqlSub = `select * from Items where gameid = ${gameid} and type = 2;`;
+            var subjects = await osql.connect(sqlSub);
 
-            var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid};`;
-            var objectAns = await osql.connect(sqlAns);
+            if(subjects.length > 0){
+                document.getElementById('subject').innerHTML = "お題：" + subjects[0]["context"] + "の意外な使い道とは？";
+            }
 
-            // document.getElementById('subject').innerHTML = objectSub[0]["context"];
-
-            ////////////////////////////////////////////////////////////////////////
+            var sqlAns = `select * from Items where gameid = ${gameid} and type = 1;`;
+            var answers = await osql.connect(sqlAns);
 
             var html = '';
             html = html + '<ul>';
-            for (var i = 0; i < objectAns.length; i++) {
-                var object = objectAns[i];
-                html = html + '<ol>' + ' 回答内容：' + object.context + '</ol>';
+            for (var i = 0; i < answers.length; i++) {
+                var answer = answers[i];
+                html = html + '<ol>' + answer.context + '!!' + '</ol>';
             }
             html = html + '</ul>';
             document.getElementById('answers').innerHTML = html;
         }
 
         async function reset() {
-            var sql1 = `delete from Players where gameid = ${gameid};`
-            await osql.connect(sql1);
-            var sql2 = `delete from Ohgiri where gameid = ${gameid};`
-            await osql.connect(sql2);
+            // var sql1 = `delete from Players where gameid = ${gameid};`
+            // await osql.connect(sql1);
+            // var sql2 = `delete from Ohgiri where gameid = ${gameid};`
+            // await osql.connect(sql2);
             location.href = `usertop.html`;
-            
         }
     </script>
 

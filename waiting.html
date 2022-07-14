@@ -13,7 +13,7 @@
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
         var playerType = osql.getParam('type');
-        var level = osql.getParam('level')
+        var level = osql.getParam('level');
 
         $().ready(function () {
             showPlayers();
@@ -48,28 +48,11 @@
             document.getElementById('result').innerHTML = html;
         }
 
-        async function buttonGoPressed() {///  ゲーム参加するボタン
+        async function buttonGoPressed() {
             if (playerType == 1) {
-                if (level == 2) {
-                    var format = '無し';
-                    location.href = `answer.html?gameid=${gameid}&format=${format}&level=${level}`;
-                } else if (level == 1) {
-                    var randomId = Math.round(Math.random() * 3) + 1
-                    var sql = `select * from Formats where id = ${randomId}`
-                    var format = await osql.connect(sql);
-                    location.href = `answer.html?gameid=${gameid}&format=${format}&level=${level}`
-                }
-
+                location.href = `answer.html?gameid=${gameid}`
             } else if (playerType == 2) {
-                if (level == 2) {
-                    var format = '無し';
-                    location.href = `subject.html?gameid=${gameid}&format=${format}&level=${level}`;
-                } else if (level == 1) {
-                    var randomId = Math.round(Math.random() * 3) + 1
-                    var sql = `select * from Formats where id = ${randomId}`
-                    var format = await osql.connect(sql);
-                    location.href = `subject.html?gameid=${gameid}&format=${format}&level=${level}`
-                }
+                location.href = `subject.html?gameid=${gameid}`
             }
         }
 

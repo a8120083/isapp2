@@ -19,27 +19,10 @@
         });
 
         async function showPlayers() {// 入力が終了したユーザーを表示するテーブル
-            var sql = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = "${gameid}";`;
+            var sql = `select count(*) as count from Items where Items.gameid = "${gameid}";`;
             var objects = await osql.connect(sql);
-            // var sqlname = `inner join Players Users bruh bruh bruh`
-            // var username = await osql.connect(sqlname)
-
-            var html = '';
-            html = html + '<table border="1" style="border-collapse: collapse">';
-            for (var i = 0; i < objects.length; i++) {
-                html = html + '<tr>';
-                var object = objects[i];
-                html = html + '<td>' + object.userid + '</td>';
-                if (object.type == 1) {
-                    var levelText = "回答者";
-                } else if (object.type == 2) {
-                    var levelText = "お題作成者";
-                }
-                html = html + '<td>' + levelText + '</td>';
-                html = html + '</tr>';
-            }
-            html = html + '</table>';
-            document.getElementById('result').innerHTML = html;
+            console.log(objects);
+            document.getElementById('result').innerHTML = `現在${objects[0].count}人の入力が終わっています`;
         }
 
 
@@ -48,17 +31,10 @@
             var sql3 = `select * from Ohgiri where gameid = ${gameid};`
             var object = await osql.connect(sql3);
             var playernum = object[0]['playernum'];
-            console.log(playernum)
-
             var sql2 = `select * from Items where gameid = "${gameid}";`;
             var Items = await osql.connect(sql2);
             var length = Items.length;
-            console.log(length);
-            if (playernum == length) {
-                location.href = `result.html?gameid=${gameid}`;
-            } else {
-                document.getElementById('result2').innerHTML = '他のプレーヤーを待っています！！';
-            }
+            location.href = `result.html?gameid=${gameid}`;
         }
 
 

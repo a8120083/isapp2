@@ -11,27 +11,23 @@
     <script>// 回答者のページ
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
-        var format = osql.getParam('format');
-        var level = osql.getParam('level');
 
         $().ready(function () {
             init();
         });
 
-        function init() {
-            document.getElementById('welcome').innerHTML = `ようこそfdjsoafjdosaさん`;
-            document.getElementById('format').innerHTML = `${format}`;
+        async function init() {
+            var me = await osql.getMe();
+            document.getElementById('welcome').innerHTML = `ようこそ${me.fname}さん`;
+            document.getElementById('format').innerHTML = `XXXの意外な使い道を回答してください。XXXを自分で一つ想定してください。`;
         }
 
         async function buttonPressed() {
             var me = await osql.getMe();
             var sqlid = `select * from Players where userid = '${me.id}' and gameid = ${gameid};`;
-            console.log(me.id);
-            console.log(gameid);
             var playerInfo = await osql.connect(sqlid);
-            var answer = document.getElementById("createAnswer").value;
             console.log(playerInfo);
-            console.log(playerInfo[0]['playerid']);
+            var answer = document.getElementById("createAnswer").value;
             var sql = `insert into Items (gameid, type, playerid, context) values (${gameid}, 1, ${playerInfo[0]['playerid']}, '${answer}');`;
             await osql.connect(sql);
             location.href = `waiting2.html?gameid=${gameid}`;
