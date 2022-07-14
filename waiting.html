@@ -13,11 +13,13 @@
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
         var playerType = osql.getParam('type');
+        var level = osql.getParam('level')
 
         $().ready(function () {
             showPlayers();
             setInterval(showPlayers, 2000);
         });
+
 
         async function showPlayers() {// 参加者を表示するテーブル
             var sql = `select * from Players where gameid = "${gameid}";`;
@@ -46,11 +48,28 @@
             document.getElementById('result').innerHTML = html;
         }
 
-        function buttonGoPressed() {///  ゲーム参加するボタン
+        async function buttonGoPressed() {///  ゲーム参加するボタン
             if (playerType == 1) {
-                location.href = `answer.html?gameid=${gameid}`;
+                if (level == 2) {
+                    var format = '無し';
+                    location.href = `answer.html?gameid=${gameid}&format=${format}&level=${level}`;
+                } else if (level == 1) {
+                    var randomId = Math.round(Math.random() * 3) + 1
+                    var sql = `select * from Formats where id = ${randomId}`
+                    var format = await osql.connect(sql);
+                    location.href = `answer.html?gameid=${gameid}&format=${format}&level=${level}`
+                }
+
             } else if (playerType == 2) {
-                location.href = `subject.html?gameid=${gameid}`;
+                if (level == 2) {
+                    var format = '無し';
+                    location.href = `subject.html?gameid=${gameid}&format=${format}&level=${level}`;
+                } else if (level == 1) {
+                    var randomId = Math.round(Math.random() * 3) + 1
+                    var sql = `select * from Formats where id = ${randomId}`
+                    var format = await osql.connect(sql);
+                    location.href = `subject.html?gameid=${gameid}&format=${format}&level=${level}`
+                }
             }
         }
 
@@ -81,11 +100,7 @@
 <body>
     <h1>大喜利</h1>
     <div>
-        <!-- <h2>ネーム、テーマ作成</h2>
-            name(4to8characters):<input id="name" value="" type="text" equired
-            minlength="4" maxlength="8" size="10"><br>
-        </form>
-        <br> -->
+        <div id="status"></div>
         <button id="bruh" onclick="buttonGoPressed()">GO!</button>
         <div id="result"></div>
         <button id="jojojo" onclick="buttonBackPressed()">Back</button>

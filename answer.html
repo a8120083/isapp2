@@ -11,6 +11,8 @@
     <script>// 回答者のページ
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
+        var format = osql.getParam('format');
+        var level = osql.getParam('level');
 
         $().ready(function () {
             init();
@@ -18,6 +20,7 @@
 
         function init() {
             document.getElementById('welcome').innerHTML = `ようこそfdjsoafjdosaさん`;
+            document.getElementById('format').innerHTML = `${format}`;
         }
 
         async function buttonPressed() {
@@ -42,7 +45,7 @@
     <h1>解答作成</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
-    <div id="subjectFormat"></div>
+    <div id="format"></div>
     <p>あなたは回答者です。回答を入力してください</p>
         <input id="createAnswer" name="createAnswer" placeholder="回答を入力">
         <button id="create" onclick="buttonPressed()">完了</button>

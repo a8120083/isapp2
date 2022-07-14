@@ -12,32 +12,42 @@
         osql.requireLogin();
         var gameid = osql.getParam('gameid');
 
-        async function showResults() {
-            var sqlSub = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 2;`;
-            var objectSub = await osql.connect(sql);
+        $().ready(function () {
+            init();
+        });
 
-            var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 1;`;
+        function init(){
+            showResults();
+        }
+
+        async function showResults() {
+            // var sqlSub = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 2;`;
+            // var objectSub = await osql.connect(sql);
+
+            var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid};`;
             var objectAns = await osql.connect(sql);
 
-            document.getElementById('subject').innerHTML = objectSub[0]["context"];
-            
+            // document.getElementById('subject').innerHTML = objectSub[0]["context"];
+
             ////////////////////////////////////////////////////////////////////////
 
             var html = '';
             html = html + '<ul>';
             for (var i = 0; i < objectAns.length; i++) {
                 var object = objectAns[i];
-                html = html + '<ol>' + '回答者：' + object.userid + ' 回答内容：' + object.context + '</ol>';
+                html = html + '<ol>' + ' 回答内容：' + object.context + '</ol>';
             }
             html = html + '</ul>';
             document.getElementById('answers').innerHTML = html;
         }
 
-        async function reset(){
+        async function reset() {
             var sql1 = `delete from Players where gameid = ${gameid};`
             await osql.connect(sql1);
             var sql2 = `delete from Ohgiri where gameid = ${gameid};`
-            await osql.connect(sql1);
+            await osql.connect(sql2);
+            location.href = `usertop.html`;
+            
         }
     </script>
 
