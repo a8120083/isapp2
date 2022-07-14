@@ -29,19 +29,14 @@
             var html = '';
             html = html + '<table border="1" style="border-collapse: collapse">';
             html = html + '<tr>';
-            html = html + '<th>ルーム名</th><th>参加者数</th><th>レベル</th><th>お題作成者</th><th>回答者として参加</th><th>お題作成者として参加</th>';
+            html = html + '<th>ルーム名</th><th>参加者数</th><th>お題</th><th>お題作成者</th><th>回答者として参加</th><th>お題作成者として参加</th>';
             html = html + '</tr>';
             for (var i = 0; i < objects.length; i++) {
                 html = html + '<tr>';
                 var object = objects[i];
                 html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + object.playernum + '人</td>';
-                if (object.level == 1) {
-                    var levelText = "初級者";
-                } else if (object.level == 2) {
-                    var levelText = "上級者";
-                }
-                html = html + '<td>' + levelText + '</td>';
+                html = html + '<td>' + object.subject + '</td>';
                 if (object.providerid == 0) {
                     var provider = 0;
                 } else {
@@ -104,8 +99,15 @@
 
         async function buttonCreationPressed() {
             var newRoom = document.getElementById("createRoom").value;
-            console.log(newRoom);
-            var sql = `insert into Ohgiri (name, providerid, playernum, level, subjectid) values ('${newRoom}', 0, 0, 1, 0);`;
+            var object = document.getElementById("subject");
+
+            // selectedで選択されている値の番号が取得されます
+            var index = object.selectedIndex;
+
+            // 値を取得
+            var subject = object.options[index].text;
+
+            var sql = `insert into Ohgiri (name, providerid, playernum, subject) values ('${newRoom}', 0, 0, '${subject}');`;
             await osql.connect(sql);
             showOhgiriRooms();
         }
@@ -115,14 +117,20 @@
 </head>
 
 <body>
-    <h1>大喜利ルーム参加</h1>
+    <h1>後出し大喜利ルーム参加</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
-    <br>
     <p>ルーム新規作成</p>
-        <label for="your_name">グループの名前：</label>
-        <input id="createRoom" name="createRoom" placeholder="名前を入力">
-        <button onclick="buttonCreationPressed()">作成</button>
+    <label for="your_name">グループの名前：</label>
+    <input id="createRoom" name="createRoom" placeholder="名前を入力">
+    お題：<select id="subject">
+        <option value="XXXの意外な使い道を教えてください。" selected>XXXの意外な使い道を教えてください。</option>
+        <option value="XXXの衝撃的な原材料を教えてください。">XXXの衝撃的な原材料を教えてください。</option>
+        <option value="XXXを倒すのに必要不可欠なものを教えてください。">XXXを倒すのに必要不可欠なものを教えてください。</option>
+        <option value="4">ぶどう</option>
+        <option value="5">メロン</option>
+    </select>
+    <button onclick="buttonCreationPressed()">作成</button>
     <br>
     <hr>
     <br>

@@ -18,8 +18,10 @@
 
         async function init() {
             var me = await osql.getMe();
+            var sql = `select * from Ohgiri where gameid = ${gameid}`
+            var ohgiri = await osql.connect(sql);
             document.getElementById('welcome').innerHTML = `ようこそ${me.fname}さん`;
-            document.getElementById('format').innerHTML = `XXXの意外な使い道を回答してください。XXXを自分で一つ想定してください。`;
+            document.getElementById('format').innerHTML = `お題「${ohgiri[0]['subject']}」のXXXを自分で一つ想定してください。`;
         }
 
         async function buttonPressed() {
@@ -30,7 +32,7 @@
             var answer = document.getElementById("createAnswer").value;
             var sql = `insert into Items (gameid, type, playerid, context) values (${gameid}, 1, ${playerInfo[0]['playerid']}, '${answer}');`;
             await osql.connect(sql);
-            location.href = `waiting2.html?gameid=${gameid}`;
+            location.href = `result.html?gameid=${gameid}`;
         }
 
     </script>
@@ -38,10 +40,10 @@
 </head>
 
 <body>
-    <h1>解答作成</h1>
+    <h1>回答作成</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
-    <div id="format"></div>
+    <h2 id="format"></h2>
     <p>あなたは回答者です。回答を入力してください</p>
         <input id="createAnswer" name="createAnswer" placeholder="回答を入力">
         <button id="create" onclick="buttonPressed()">完了</button>
