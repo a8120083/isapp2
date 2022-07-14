@@ -54,6 +54,25 @@
             }
         }
 
+        async function buttonBackPressed() {///  退会するボタン
+            if (playerType == 1) {
+                var sql = `update Ohgiri set playernum = playernum - 1 where gameid = ${gameid};`;
+                await osql.connect(sql);
+                var sql2 = `delete from Players where gameid = ${gameid};`
+                await osql.connect(sql2);
+                location.href = `usertop.html`;
+            } else if (playerType == 2) {
+                var sql = `update Ohgiri set playernum = playernum - 1 where gameid = ${gameid};`;
+                await osql.connect(sql);
+                var sql2 = `delete from Players where gameid = ${gameid};`
+                await osql.connect(sql2);
+                var sql3 = `update Ohgiri set providerid = 0 where gameid = ${gameid};`
+                await osql.connect(sql3);
+                location.href = `usertop.html`;
+            }
+
+        }
+
 
     </script>
 
@@ -69,6 +88,7 @@
         <br> -->
         <button id="bruh" onclick="buttonGoPressed()">GO!</button>
         <div id="result"></div>
+        <button id="jojojo" onclick="buttonBackPressed()">Back</button>
 
     </div>
 </body>

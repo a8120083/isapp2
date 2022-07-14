@@ -72,7 +72,7 @@
             var tableInfo = await osql.connect(thisTable);
 
             var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 1);`;
-            if (tableInfo[0]["playernum"] <= 3) {
+            if (tableInfo[0]["playernum"] <= 2) {
                 await osql.connect(sql);
                 var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
                 await osql.connect(sqlcount);
@@ -90,14 +90,14 @@
 
             var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 2);`;
             if (tableInfo1[0]["providerid"] == 0) {
-                window.alert("すでにお題作成者が参加しています。");
-            } else {
                 await osql.connect(sql);
                 var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
                 await osql.connect(sqlcount);
-                var sqlprovider = `update Ohgiri set providerid = ${me.id} + 1 where gameid = ${gameid};`;
+                var sqlprovider = `update Ohgiri set providerid = '${me.id}' where gameid = ${gameid};`;
                 await osql.connect(sqlprovider);
                 location.href = `waiting.html?gameid=${gameid}&type=2`;
+            } else {
+                window.alert("すでにお題作成者が参加しています。");
             }
         }
 
