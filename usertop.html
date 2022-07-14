@@ -72,14 +72,10 @@
             var tableInfo = await osql.connect(thisTable);
 
             var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 1);`;
-            if (tableInfo[0]["playernum"] <= 100) {
-                await osql.connect(sql);
-                var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
-                await osql.connect(sqlcount);
-                location.href = `waiting.html?gameid=${gameid}&type=1&level=${level}`;
-            } else {
-                window.alert("参加者が定員に達しています。");
-            }
+            await osql.connect(sql);
+            var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
+            await osql.connect(sqlcount);
+            location.href = `waiting.html?gameid=${gameid}&type=1&level=${level}`;
         }
 
         async function buttonSubPressed(gameid, level) { // 参加フォーム
