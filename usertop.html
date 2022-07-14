@@ -78,24 +78,24 @@
             location.href = `waiting.html?gameid=${gameid}&type=1&level=${level}`;
         }
 
-        async function buttonSubPressed(gameid, level) { // 参加フォーム
-            var me = await osql.getMe();
+        // async function buttonSubPressed(gameid, level) { // 参加フォーム
+        //     var me = await osql.getMe();
 
-            var thisTable2 = `select * from Ohgiri where gameid = ${gameid}`;
-            var tableInfo1 = await osql.connect(thisTable2);
+        //     var thisTable2 = `select * from Ohgiri where gameid = ${gameid}`;
+        //     var tableInfo1 = await osql.connect(thisTable2);
 
-            var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 2);`;
-            if (tableInfo1[0]["providerid"] == 0) {
-                await osql.connect(sql);
-                var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
-                await osql.connect(sqlcount);
-                var sqlprovider = `update Ohgiri set providerid = '${me.id}' where gameid = ${gameid};`;
-                await osql.connect(sqlprovider);
-                location.href = `waiting.html?gameid=${gameid}&type=2&level=${level}`;
-            } else {
-                window.alert("すでにお題作成者が参加しています。");
-            }
-        }
+        //     var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 2);`;
+        //     if (tableInfo1[0]["providerid"] == 0) {
+        //         await osql.connect(sql);
+        //         var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
+        //         await osql.connect(sqlcount);
+        //         var sqlprovider = `update Ohgiri set providerid = '${me.id}' where gameid = ${gameid};`;
+        //         await osql.connect(sqlprovider);
+        //         location.href = `waiting.html?gameid=${gameid}&type=2&level=${level}`;
+        //     } else {
+        //         window.alert("すでにお題作成者が参加しています。");
+        //     }
+        // }
 
         async function buttonCreationPressed() {
             var newRoom = document.forms['creation'].elements['createRoom'].value;
