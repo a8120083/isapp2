@@ -4,7 +4,6 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script type="text/javascript" src="lib/osql.js"></script>
 
@@ -49,7 +48,7 @@
                     var provider = 1;
                 }
                 html = html + '<td>' + provider + '人</td>';
-                if (object.playernum >= 4) {
+                if (object.playernum >= 100) {
                     html = html + '<td>' + '<button id=' + object.level + ' type="button" value=' + object.gameid + ' onclick="buttonAnsPressed(this.value,this.id)" disabled>回答者</button>' + '</td>';
                 } else {
                     html = html + '<td>' + '<button id=' + object.level + ' type="button" value=' + object.gameid + ' onclick="buttonAnsPressed(this.value,this.id)">回答者</button>' + '</td>';
@@ -76,7 +75,7 @@
 
             var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 1);`;
             console.log(sql);
-            if (tableInfo[0]["playernum"] <= 2) {
+            if (tableInfo[0]["playernum"] <= 100) {
                 await osql.connect(sql);
                 var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
                 await osql.connect(sqlcount);
@@ -88,10 +87,8 @@
 
         async function buttonSubPressed(gameid, level) { // 参加フォーム
             var me = await osql.getMe();
-
             var thisTable2 = `select * from Ohgiri where gameid = ${gameid}`;
             var tableInfo1 = await osql.connect(thisTable2);
-
             var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 2);`;
             if (tableInfo1[0]["providerid"] == 0) {
                 await osql.connect(sql);
