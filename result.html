@@ -19,7 +19,7 @@
             var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid} and type = 1;`;
             var objectAns = await osql.connect(sql);
 
-            document.getElementById('subject').innerHTML = objectSub.context;
+            document.getElementById('subject').innerHTML = objectSub[0]["context"];
             
             ////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +32,13 @@
             html = html + '</ul>';
             document.getElementById('answers').innerHTML = html;
         }
+
+        async function reset(){
+            var sql1 = `delete from Players where gameid = ${gameid};`
+            await osql.connect(sql1);
+            var sql2 = `delete from Ohgiri where gameid = ${gameid};`
+            await osql.connect(sql1);
+        }
     </script>
 
 </head>
@@ -39,9 +46,9 @@
 <body>
     <h1>Users</h1>
     <h1 id="subject"></h1>
-
     <div id="answers"></div>
     <hr>
+    <button onclick="reset()">トップへ戻る</button>
 
 </body>
 

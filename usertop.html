@@ -10,7 +10,7 @@
 
     <script>
         osql.requireLogin();
-        var username = osql.getParam('name');
+        var name = osql.getParam('name');
 
         $().ready(function () {
             init();
@@ -18,7 +18,7 @@
         });
 
         function init() {
-            document.getElementById('welcome').innerHTML = `ようこそ${username}さん`;
+            document.getElementById('welcome').innerHTML = `ようこそ${name}さん`;
         }
 
         async function showOhgiriRooms() {
@@ -27,42 +27,78 @@
 
             var html = '';
             html = html + '<table border="1" style="border-collapse: collapse">';
+            html = html + '<tr>';
+            html = html + '<th>ルーム名</th><th>参加者数</th><th>レベル</th><th>お題作成者</th><th>回答者として参加</th><th>お題作成者として参加</th>';
+            html = html + '</tr>';
             for (var i = 0; i < objects.length; i++) {
                 html = html + '<tr>';
                 var object = objects[i];
                 html = html + '<td>' + object.name + '</td>';
-                html = html + '<td>' + object.playernum + '</td>';
-                if(object.level == 1){
+                html = html + '<td>' + object.playernum + '人</td>';
+                if (object.level == 1) {
                     var levelText = "初級者";
-                } else if(object.level == 2){
+                } else if (object.level == 2) {
                     var levelText = "上級者";
                 }
                 html = html + '<td>' + levelText + '</td>';
-                html = html + '<td>' + '<input type="radio" name="playerType" value="1" checked>回答者';
-                html = html + '<td>' + '<input type="radio" name="playerType" value="2">お題作成者';
-                html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonPressed(this.value)">参加</button>' + '</td>';
+                if (object.providerid == 0) {
+                    var provider = 0;
+                } else {
+                    var provider = 1;
+                }
+                html = html + '<td>' + provider + '人</td>';
+                if (object.playernum >= 4) {
+                    html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonAnsPressed(this.value)" disabled>回答者</button>' + '</td>';
+                } else {
+                    html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonAnsPressed(this.value)">回答者</button>' + '</td>';
+                }
+                if (!object.providerid == 0) {
+                    html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonSubPressed(this.value)">お題作成者</button disabled>' + '</td>';
+                } else {
+                    html = html + '<td>' + '<button id=' + i + ' type="button" value=' + object.gameid + ' onclick="buttonSubPressed(this.value)">お題作成者</button>' + '</td>';
+                }
+
+
                 html = html + '</tr>';
             }
             html = html + '</table>';
             document.getElementById('ohgiriTable').innerHTML = html;
         }
 
-        async function buttonPressed(gameid) { // 参加フォーム
+        async function buttonAnsPressed(gameid) { // 参加フォーム
             var me = await osql.getMe();
-            var elements = document.getElementsByName("playerType");
-            // 選択状態の値を取得
-            for (var type = "", i = elements.length; i--;) {
-                if (elements[i].checked) {
-                    var type = elements[i].value;
-                    break;
-                }
-            }
 
-            var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, ${type});`;
-            await osql.connect(sql);
-            var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
-            await osql.connect(sqlcount);
-            location.href = `waiting.html?gameid=${gameid}&type=${type}`;
+            var thisTable = `select * from Ohgiri where gameid = ${gameid}`;
+            var tableInfo = await osql.connect(thisTable);
+
+            var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 1);`;
+            if (tableInfo[0]["playernum"] <= 3) {
+                await osql.connect(sql);
+                var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
+                await osql.connect(sqlcount);
+                location.href = `waiting.html?gameid=${gameid}&type=1`;
+            } else {
+                window.alert("参加者が定員に達しています。");
+            }
+        }
+
+        async function buttonSubPressed(gameid) { // 参加フォーム
+            var me = await osql.getMe();
+
+            var thisTable2 = `select * from Ohgiri where gameid = ${gameid}`;
+            var tableInfo1 = await osql.connect(thisTable2);
+
+            var sql = `insert ignore into Players (userid, gameid, type) values ('${me.id}', ${gameid}, 2);`;
+            if (tableInfo1[0]["providerid"] == 0) {
+                window.alert("すでにお題作成者が参加しています。");
+            } else {
+                await osql.connect(sql);
+                var sqlcount = `update Ohgiri set playernum = playernum + 1 where gameid = ${gameid};`;
+                await osql.connect(sqlcount);
+                var sqlprovider = `update Ohgiri set providerid = ${me.id} + 1 where gameid = ${gameid};`;
+                await osql.connect(sqlprovider);
+                location.href = `waiting.html?gameid=${gameid}&type=2`;
+            }
         }
 
         async function buttonCreationPressed() {
@@ -78,9 +114,10 @@
 </head>
 
 <body>
-    <h1>ユーザトップ</h1>
+    <h1>大喜利ルーム参加</h1>
     <p id="welcome">ようこそxxさん</p>
     <hr>
+    <br>
     <p>ルーム新規作成</p>
     <form name="creation" method="post">
         <label for="your_name">グループの名前：</label>
@@ -89,6 +126,8 @@
         <label><input type="radio" name="level" value=2>上級者</label>
         <input type="submit" value="作成">
     </form>
+    <br>
+    <hr>
     <br>
     <div id="ohgiriTable"></div>
 </body>
