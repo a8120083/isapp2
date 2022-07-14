@@ -25,7 +25,7 @@
             // var objectSub = await osql.connect(sql);
 
             var sqlAns = `select * from Items inner join Players on Items.playerid = Players.playerid where Items.gameid = ${gameid};`;
-            var objectAns = await osql.connect(sql);
+            var objectAns = await osql.connect(sqlAns);
 
             // document.getElementById('subject').innerHTML = objectSub[0]["context"];
 
